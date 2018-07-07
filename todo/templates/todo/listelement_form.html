@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>To Do</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <div>
+            <form method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Add element" class="btn btn-primary">
+        </form>
+        </div>
+
+        <br/>
+        <div>
+            <ul class="list-group">
+            {% for list_element in list_elements %}
+                <li class="list-group-item">
+                {{ list_element.text }}
+                </li>
+            {% empty %}
+            <li class="list-group-item">
+                No todo elements yet.
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
