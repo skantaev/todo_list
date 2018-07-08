@@ -1,5 +1,6 @@
-from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, View
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 from .models import ListElement
 from .forms import ListElementForm
@@ -13,24 +14,23 @@ class ListElementCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['list_elements'] = ListElement.objects.filter(visible=True)
+        context['list_elements'] = ListElement.objects.all()
         return context
 
 
-class ListElementUpdate(UpdateView):
-    model = ListElement
-    form_class = ListElementForm
+class ListChangeElement(View):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['list_elements'] = ListElement.objects.filter(visible=True)
-        return context
+    def get(self, request):
+        try:
+            pk = int(request.GET.get('id'))
+            list_element = get_object_or_404(ListElement, pk=pk)
 
+            if request.GET.get('delete'):
+                list_element.delete()
+            else:
+                list_element.done = not list_element.done
+                list_element.save()
 
-
-class ListElementDelete(DeleteView):
-    model = ListElement
-    form_class = ListElementForm
-    success_url = reverse_lazy('index')
-
-
+            return HttpResponse(status=200)
+        except ValueError:
+            return HttpResponse(status=400)

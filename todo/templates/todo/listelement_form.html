@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,24 +9,32 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'todo/app.js' %}"></script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Todo List</h1>
+        <h1 align="center">Todo List</h1>
+        <br>
         <div>
             <form method="post">{% csrf_token %}
-            {{ form.as_p }}
+                {{ form.as_p }}
             <input type="submit" value="Add element" class="btn btn-primary">
         </form>
         </div>
 
-        <br/>
-        <div>
-            <ul class="list-group">
+        <br>
+        <div id="list">
+            <ul class="list-group list-group-flush">
             {% for list_element in list_elements %}
                 <li class="list-group-item">
-                {{ list_element.text }}
+                    <div style="display: inline; margin-right: 10px;">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteElement('{{ list_element.pk }}')">X</button>
+                        <button type="button" class="btn btn-outline-success btn-sm" onclick="markDone({{ list_element.pk }})">✓</button>
+                    </div>
+                    <div class="text" id="{{ list_element.pk }}" style="display: inline;">
+                        <span {% if list_element.done %}style="text-decoration: line-through;"{% endif %}>{{ list_element.text }}</span>
+                    </div>
                 </li>
             {% empty %}
             <li class="list-group-item">

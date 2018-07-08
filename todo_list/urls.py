@@ -21,5 +21,6 @@ from todo import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.ListElementCreate.as_view(), name='index'),
-    path()
+    path('update/', views.ListChangeElement.as_view(), name='update'),
+    path('delete/', views.ListChangeElement.as_view(), name='delete')
 ]
