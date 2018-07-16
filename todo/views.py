@@ -20,12 +20,12 @@ class ListElementCreate(CreateView):
 
 class ListChangeElement(View):
 
-    def get(self, request):
+    def post(self, request):
         try:
-            pk = int(request.GET.get('id'))
+            pk = int(request.POST.get('id'))
             list_element = get_object_or_404(ListElement, pk=pk)
 
-            if request.GET.get('delete'):
+            if request.POST.get('delete'):
                 list_element.delete()
             else:
                 list_element.done = not list_element.done
